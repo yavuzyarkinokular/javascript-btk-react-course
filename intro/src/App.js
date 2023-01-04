@@ -10,14 +10,24 @@ import React, { Component } from "react";
 export default class App extends Component {
   state = {
     currentCategory: "",
+    products: [],
   };
   changeCategory = (category) => {
     this.setState({ currentCategory: category.type });
   };
+  componentDidMount() {
+    this.getProducts();
+  }
+  getProducts = () => {
+    fetch("http://localhost:3000/products")
+      .then((response) => response.json())
+      .then((data) => this.setState({ products: data }));
+  };
+
   render() {
     let productInfo = {
       title: "Product List",
-      subtitle: "Bünyemizde ki araç kategorileri aşağıdaki gibidir   ",
+      subtitle: "Ürünlerimiz   ",
     };
     let categoryInfo = {
       title: "Category List",
@@ -40,6 +50,7 @@ export default class App extends Component {
             </Col>
             <Col xs="6">
               <ProductList
+                products={this.state.products}
                 currentCategory={this.state.currentCategory}
                 info={productInfo}
               ></ProductList>

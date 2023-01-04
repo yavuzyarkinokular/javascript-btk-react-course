@@ -3,30 +3,39 @@ import { ListGroup, ListGroupItem } from "reactstrap";
 
 export default class CategoryList extends Component {
   state = {
-    aracsegmentleri: [
-      { id: 1, type: "Manuel Benzin" },
-      { id: 2, type: "Manuel Dizel" },
-      { id: 3, type: "Otomatik Benzin" },
-      { id: 4, type: "Otomatik Dizel" },
-      { id: 5, type: "Ticari" },
-    ],
+    categories: [],
+  };
+
+  componentDidMount() {
+    this.getCategories();
+  }
+
+  getCategories = () => {
+    fetch("http://localhost:3000/categories")
+      .then((response) => response.json())
+      .then((data) => this.setState({ categories: data }));
   };
 
   render() {
     return (
       <div>
+        <h3>{this.props.info.title}</h3>
         <ListGroup>
-          <h1> {this.props.info.title}</h1>
-          <h3> {this.props.info.subtitle}</h3>
-          {this.state.aracsegmentleri.map((category) => (
+          {this.state.categories.map((category) => (
             <ListGroupItem
+              active={
+                category.categoryName === this.props.currentCategory
+                  ? true
+                  : false
+              }
               onClick={() => this.props.changeCategory(category)}
               key={category.id}
             >
-              {category.type}
+              {category.categoryName}
             </ListGroupItem>
           ))}
         </ListGroup>
+        {/* <h4>{this.props.currentCategory}</h4> */}
       </div>
     );
   }
